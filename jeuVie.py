@@ -2,12 +2,14 @@ import pygame
 import math
 import time
 import sys
+import random
 
 BLACK    = (   0,   0,   0)
 WHITE    = ( 255, 255, 255)
 GREEN    = (   0, 255,   0)
 RED      = ( 255,   0,   0)
 BLUE = (0,0,255)
+PINK = (255,105,180)
 
 TOUR = 0
 voisins = 0
@@ -28,6 +30,7 @@ init = pygame.font.Font(None, 30)
 textRectGo = init.render('Lancer !', False, BLACK)
 textRectStop = init.render('Stop', False, BLACK)
 textRectClear = init.render('Clear', False, BLACK)
+textRectAlea = init.render('Alea', False, BLACK)
 tours = init.render(str(TOUR), False, RED)
 
 ##Fenetre##
@@ -45,14 +48,16 @@ for j in range(0,screen_h,carre):
    pygame.draw.line(screen,BLACK, (0,j),(screen_w,j),1) 
 
 #boutons
+pygame.draw.rect(screen, BLUE, (10, screen_h+margin/4,80,margin/2))
 pygame.draw.rect(screen, GREEN, (screen_w/4, screen_h+margin/4,100,margin/2))
 pygame.draw.rect(screen, RED, (screen_w/2, screen_h+margin/4,80,margin/2))
-pygame.draw.rect(screen, BLUE, (10, screen_h+margin/4,80,margin/2))
+pygame.draw.rect(screen, PINK, (3*screen_w/4, screen_h+margin/4,80,margin/2))
 
 #texte sur les boutons
 screen.blit(textRectGo, (screen_w/4+5, screen_h+margin/4))
 screen.blit(textRectStop, (screen_w/2+20, screen_h+margin/4))
 screen.blit(textRectClear, (25, screen_h+margin/4))
+screen.blit(textRectAlea, (3*screen_w/4 + 15, screen_h+margin/4))
 screen.blit(tours, (screen_w - 80, screen_h+margin/4))
 
 pygame.display.update()
@@ -67,6 +72,16 @@ def clear():
    tours = init.render(str(TOUR), False, RED)
    screen.blit(tours, (screen_w - 80, screen_h+margin/4))
    pygame.display.update()
+   
+def debut_aleatoire():
+   for i in range(0,nb_col):
+      for j in range(0,nb_lignes):
+         rand = random.randint(0,10)
+         if(rand >7):
+            grid[i][j] = 1
+         else:
+            grid[i][j] = 0
+		 
    
 ###fonction pour trouver le nombre de voisins en vie d'une cellule passée en paramètres
 def nombre_voisins(i,j):
@@ -159,6 +174,8 @@ def initialisation():
                print("Vous pouvez maintenant placez des cellules, les enlever et lancer l'évolution. ")
             if(10 < pos[0] < 80 and screen_h+margin/4 < pos[1] < screen_h+3*margin/4):
                clear()
+            if(3*screen_w/4 < pos[0] < 3*screen_w/4+80 and screen_h+margin/4 < pos[1] < screen_h+3*margin/4):
+               debut_aleatoire()
 			#action d'ajouter une cellule vivante sur la grille
             if(0 < pos[1] < screen_h):
                x = 	math.floor((pos[0]/carre))
